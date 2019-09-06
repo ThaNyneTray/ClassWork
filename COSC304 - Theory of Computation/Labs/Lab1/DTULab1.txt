@@ -1,0 +1,88 @@
+-- COSC 304 Fall 2019
+-- Lab1 Sept 3, 2019
+-- DTULab1
+
+module DTULab1 where
+
+{-
+Question 2
+ Typing an integer, a real number or a list into the interpreter
+ prints out those values below the respective lines.
+
+Question 3
+ The :type command prints out the type structure of the values
+ I had used.
+  Prelude> :type 1
+  1 :: Num p => p
+
+  Prelude> :type [1,2,3]
+  [1,2,3] :: Num a => [a]
+
+  Prelude> :type 2.31
+  2.31 :: Fractional p => p
+
+Question 4
+ Shows the type structure of the ordered pair as well
+  Prelude> :type (1,2.3)
+  (1,2.3) :: (Fractional b, Num a) => (a, b)
+
+-}
+
+-- Question 5
+double x = 2 * x
+triple x = 3 * x
+
+-- Question 6
+add1 (a, b) = a + b
+add2 a b = a + b
+
+-- Question 7
+fact 0 = 1
+fact 1 = 1
+fact x = x * fact (x - 1)
+
+-- Question 8
+boolval1 = 3 == 4
+
+{- boolval1 is False, boolval2 is True
+-}
+
+-- Question 9
+first (a, b) = a
+second (a, b) = b
+
+-- Question 10
+{-
+ The Data Type is not specified when using :type. So it seems that
+ these functions can be used for any type, including functions
+  *DTULab1> :type (first)
+  (first) :: (a, b) -> a
+  *DTULab1> :type (second)
+  (second) :: (a, b) -> b
+
+ Type of first(add1, fact) is:
+  first(add1, fact) :: Num a => (a, a) -> a
+ Looking at this, running first() on 2 functions will return the first
+ function in the ordered pair.
+ Running first(add1, fact) returns an error, because the function add1
+ expects an ordered pair as arguments.
+-}
+
+-- Question 11
+listlength [] = 0
+listlength (a:tail) = listlength tail + 1
+
+{-
+ the listlength function has the type:
+  listlength :: Num p => [a] -> p
+  Meaning that it's a relation from a list of any type a to a Num p,
+  which represents its length in this case
+-}
+
+-- Tests
+test1 = double 3.4
+test2 = add1 (4,5)
+test3 = add2 3.4 7.8
+test4 = fact 6
+test5 = listlength [listlength [2,3,4,5,6]]
+test6 = second (add1, fact) (test5 + 4)
