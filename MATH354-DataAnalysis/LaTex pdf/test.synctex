@@ -1,0 +1,80 @@
+SyncTeX Version:1
+Input:1:C:\Users\ThaNyneTray\Documents\CompScie\School\DataAnalysis\LaTex pdf\test.tex
+Input:2:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\article.cls
+Input:3:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\size10.clo
+Input:4:C:/PROGRA~1\R\R-36~1.1\share\texmf\tex\latex\Sweave.sty
+Input:5:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ifthen.sty
+Input:6:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\graphicx.sty
+Input:7:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\keyval.sty
+Input:8:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\graphics.sty
+Input:9:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\trig.sty
+Input:10:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg
+Input:11:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def
+Input:12:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\fancyvrb\fancyvrb.sty
+Input:13:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\textcomp.sty
+Input:14:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ts1enc.def
+Input:15:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ts1enc.dfu
+Input:16:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\fontenc.sty
+Input:17:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\t1enc.def
+Input:18:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\ae\ae.sty
+Input:19:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\fontenc.sty
+Input:20:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\t1enc.def
+Input:21:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\ae\t1aer.fd
+Input:22:C:\Users\ThaNyneTray\Documents\CompScie\School\DataAnalysis\LaTex pdf\test.aux
+Input:23:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\ts1cmr.fd
+Input:24:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\mkii\supp-pdf.mkii
+Input:25:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty
+Input:26:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty
+Input:27:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
+Input:28:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvdefinekeys.sty
+Input:29:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty
+Input:30:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty
+Input:31:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvsetkeys.sty
+Input:32:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\etexcmds.sty
+Input:33:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty
+Input:34:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty
+Input:35:C:\Users\ThaNyneTray\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty
+Input:36:C:\Users\ThaNyneTray\Documents\CompScie\School\DataAnalysis\LaTex pdf\test-concordance.tex
+Output:pdf
+Magnification:1000
+Unit:1
+X Offset:0
+Y Offset:0
+Content:
+!3432
+{1
+[1,10:4736286,46220574:26673152,41484288,0
+[1,10:8799518,46220574:22609920,40435712,0
+[1,10:8799518,6571294:22609920,786432,0
+h1,10:8799518,6571294:22609920,0,0
+]
+[1,10:8799518,44254494:22609920,36044800,0
+(1,8:8799518,8865054:22609920,454816,0
+h1,7:8799518,8865054:983040,0,0
+x1,7:10019142,8865054
+g1,7:10237374,8865054
+x1,7:11110966,8865054
+g1,7:11329198,8865054
+x1,7:11656878,8865054
+g1,7:11875110,8865054
+x1,7:12716590,8865054
+x1,7:13097998,8865054
+k1,8:31409438,8865054:18311440
+g1,8:31409438,8865054
+)
+]
+(1,10:8799518,46220574:22609920,422048,0
+k1,10:19940638,46220574:11141120
+x1,10:20268318,46220574
+k1,10:31409438,46220574:11141120
+)
+]
+]
+!656
+}1
+Input:37:C:\Users\ThaNyneTray\Documents\CompScie\School\DataAnalysis\LaTex pdf\test.aux
+!96
+Postamble:
+Count:26
+!24
+Post scriptum:
