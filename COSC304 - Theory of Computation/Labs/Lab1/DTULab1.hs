@@ -62,10 +62,16 @@ second (a, b) = b
 
  Type of first(add1, fact) is:
   first(add1, fact) :: Num a => (a, a) -> a
+
  Looking at this, running first() on 2 functions will return the first
  function in the ordered pair.
- Running first(add1, fact) returns an error, because it evaluates to the function
- add1, which expects more parameters to be passed to it.
+
+ Running first(add1, fact) returns an error indicating that there is no
+ instance of Show(), and gives a useful suggestion that "maybe you haven't
+ applied a function to enough arguments?"
+
+ This is because it evaluates to the function
+ add1, which expects more arguments to be passed to it.
 
  The function first() and second() handles different types differently
  depending on what the values in the parameters are. In the case of
@@ -74,7 +80,7 @@ second (a, b) = b
 
 -- Question 11
 listlength [] = 0
-listlength (a:tail) = listlength tail + 1
+listlength (head:restoflist) = listlength restoflist + 1
 
 {-
  the listlength function has the type:
