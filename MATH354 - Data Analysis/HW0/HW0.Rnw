@@ -1,0 +1,583 @@
+\documentclass{article}
+\usepackage{amsmath} %This allows me to use the align functionality.
+                     %If you find yourself trying to replicate
+                     %something you found online, ensure you're
+                     %loading the necessary packages!
+\usepackage{amsfonts}%Math font
+\usepackage{graphicx}%For including graphics
+\usepackage{hyperref}%For Hyperlinks
+\usepackage{natbib}        %For the bibliography
+\bibliographystyle{apalike}%For the bibliography
+\usepackage[margin=1.0in]{geometry}
+\usepackage{float}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{width=8,height=5}%set the size of the graphs to fit nicely on a 8.5x11 sheet
+\noindent \textbf{MA 354: Data Analysis I -- Fall 2019}\\%\\ gives you a new line
+\noindent \textbf{Homework 0:}\vspace{1em}\\
+\emph{Complete the following opportunities to use what we've talked about in class. 
+These questions will be graded for correctness, communication and succinctness. Ensure
+you show your work and explain your logic in a legible and refined submission. If you
+make a mistake while completing this assignment do not delete it -- instead, make a note
+about why it's a mistake, how you realized it, and how you fixed it. The best, most 
+productive recovery from a mistake will receive a 5 point bonus.}
+%Comments -- anything after % is not put into the PDF
+\begin{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Question 0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item[0.] \textbf{Complete weekly diagnostics.} Upon completion of this assignment
+  reflect, in a few sentences, on what you've learned since the beginning of the semester.
+  Think about an mention any concepts you want or need to continue working on and
+  list at least one goal for the next assignment.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Question 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item \textbf{Writing Functions and Loops.} Create a function called \texttt{f1} 
+  in \texttt{R}, in as few lines as possible that represents the  following function.
+    \[f_1(x) = \ln\left(\sqrt{x*10^3}\right)\]
+    Compare the runtime of your function to the one below using a loop that saves 
+    the runtime of each function over 1000 iterations. Summarize and compare the results.
+<<eval=FALSE>>=
+f2 <- function(x){
+  a<- x*10^3
+  b<- sqrt(a)
+  c<- log(b)
+  return(c)
+}
+f2(1)
+@
+You can track the runtime of code using the following \texttt{R} code.
+<<>>=
+start_time <- Sys.time()
+#do things you want to time here
+end_time <- Sys.time()
+runtime <-end_time - start_time
+@
+You might want to report this runtime in your .pdf document, but you'll find that the 
+runtime changes each time you compile your document. You can pass variable values in \texttt{R}
+to the document using the \texttt{Sexpr} command. For example, the runtime of the comment above
+is \Sexpr{round(runtime,3)} seconds.
+
+\textbf{Solution.} The new and shorter function \texttt{f1} is shown below.
+<<>>=
+f1 <- function(x) (log(sqrt(x * 10 ^ 3)))
+@
+Shortening the function entailed getting rid of the assignment operations in \texttt{f2}. Furthermore, I noticed that R implicitly returns the last value evaluated in the function, so the explicit \texttt{return} becomes unnecessary. There is an \href{https://stackoverflow.com/questions/11738823/explicitly-calling-return-in-a-function-or-not}{interesting conversation} about this on stack overflow.\\
+
+As suggested on the Moodle forum, I timed the 2 functions over 1,000,000 iterations. 
+
+<<eval=FALSE>>=
+
+start_time_f1 <- Sys.time()
+for (j in 1:1000000) {
+  f1(1)
+}
+end_time_f1 <- Sys.time()
+run_time_f1 <- end_time_f1 - start_time_f1
+
+
+start_time_f2 <- Sys.time()
+for (j in 1:1000000) {
+  f2(1)
+}
+
+end_time_f2 <- Sys.time()
+run_time_f2 <- end_time_f2 - start_time_f2
+@
+The table \ref{table:q1} below summarizes the runtimes for the \texttt{f1} and \texttt{f2}, as well as
+their time differences. 
+\begin{table}[!h]
+\centering
+  \begin{tabular}{cccc}\hline
+    number of iterations & f2 runtime & f1 runtime & time difference\\\hline\hline
+    $10^6$ & $0.87$ & $0.62$ & $0.25$\\
+    $10^7$ & $6.13$ & $4.29$ & $1.84$\\
+    $10^8$ & $58.44$ & $43.13$ & $15.30$\\\hline
+  \end{tabular}
+  \caption{Runtimes for f1 and f2 at different numbers of iteration}
+  \label{table:q1}
+\end{table}\\
+In all cases, \texttt{f1} runs faster than \texttt{f2}. 
+These runtime differences suggest that having more assignment operations within a function can affect its runtime significantly; especially if the function is called repeatedly and at high frequency. The takeaway here is that small tweaks like reducing the number of assignment operations/function calls can make your R code much more efficient. At the same time, I can't help but wonder whether there are real-life situations where this optimization would make a critical difference.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Question 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item \textbf{Conditional Statements and Loops.} Assess which is faster.
+  \begin{enumerate}
+    \item Generate 1000 random integers between 1 and 1000 with replacement with
+    the following \texttt{R} code.
+<<>>=
+random.ints<-sample(x=1:1000,size=1000,replace=TRUE)
+@    
+    Then, using a loop, create a vector named \texttt{random.type} that is ``odd"
+    when the corresponding value in \texttt{random.ints} is odd and ``even" otherwise.
+    \begin{enumerate}
+      \item Add elements to the vector called \texttt{random.type} as they
+      are decided; e.g., for an iteration where the value is odd we add
+      an element using \texttt{random.type<-c(random.type,"odd")}.
+      \item Create an empty vector of size 1000 (with \texttt{NA} entries) to 
+      start and place elements into the vector; e.g., for iteration $i$
+      where the value is odd we place the element using \texttt{random.type[i]}.
+    \end{enumerate}
+    Which is faster?
+\end{enumerate}
+\textbf{Solution:} 
+As specified in the question, the first method of creating the ``odd/even"
+vector involves appending to the vector as the parity of a value is decided:
+
+<<>>=
+# appending approach
+start_time <- Sys.time()
+
+# random.type1 -> values will be appended as they are decided
+random.type1 <- c()
+
+# populating by appending
+for (i in 1:length(random.ints)) {
+  if (random.ints[i] %% 2 == 0) {
+    random.type1 <- c(random.type1, "even")
+  }
+  else {
+    random.type1 <- c(random.type1, "odd")
+  }
+}
+end_time <- Sys.time()
+run_time1 <- as.numeric(end_time - start_time)
+@
+
+The second method involves creating an NA vector of size 1000, then indexing into 
+it to place values into the vector:
+<<>>=
+# indexing approach
+
+start_time <- Sys.time()
+
+# random.type2 -> vector will be indexed
+random.type2 <- rep(NA, length(random.ints))
+
+# populating by indexing
+for (i in 1:length(random.ints)) {
+  if (random.ints[i] %% 2 == 0) {
+    random.type2[i] <- "even"
+  }
+  else{
+    random.type2[i] <- "odd"
+  }
+}
+
+end_time <- Sys.time()
+run_time2 <- as.numeric(end_time - start_time)
+@
+
+Even with a vector of size 1000, the time difference is significant. I went ahead and timed these 2 methods for bigger-sized vectors. The results are summarized in table \ref{table:q2} below.
+
+\begin{table}[!h]
+\centering
+  \begin{tabular}{cccc}\hline
+    number of iterations & method1 runtime & method2 runtime & time difference\\\hline\hline\\
+     $10^3$   &  $0.247$  & $0.0040$  & $0.243$ \\
+     $10^4$   &  $25.79$  & $0.0479$  & $25.742$ \\
+     $10^5$   &  $2632.868$ & $1.733$  & $2631.137$
+  \end{tabular}
+  \caption{Runtime comparison of the 2 methods of creating a vector}
+  \label{table:q2}
+\end{table}
+
+The time difference grows quite significant at higher levels of iteration; at $10^5$ iterations, the running time of method1 is about 44 minutes, while method2 only takes 1.733s.\\
+The operation \texttt{random.type1 <- c(random.type1, "even")} essentially copies values in the vector \texttt{random.type1} into a new vector, appends the value ``even" to it, then assigns this new vector to the variable name \texttt{random.type1}. As the vector grows, so does the size of the vector being copied in each operation. The takeaway here is that you should never grow a vector if you can avoid it; instead, create a vector of the expected size and index into it, placing values as needed. 
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Question 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item \textbf{Conditional Statements and Loops} Each new term in the Fibonacci sequence is 
+  generated by adding the previous two terms. By starting with 1 and 2, the first 
+  10 terms will be 1, 2, 3, 5, 8, 13, 21, 34, 55, 89. Find the sum of the even terms in the 
+  Fibonacci sequence whose values do not exceed one million.
+  
+  \textbf{Solution:} My solution to this question is shown below:
+<<>>=
+
+fib.vector <- c(1,2)
+
+sum.fib <- 2
+
+repeat {
+  # get the value of the next fibonacci number
+  next.fib = sum(fib.vector)
+  # break if the value of next.fib exceeds 1,000,000
+  if (next.fib > 1000000) {
+    break
+  }
+  # add the next fib number to sum.fib is it's an even term 
+  else if (next.fib %% 2 == 0) {
+    sum.fib <- sum.fib + next.fib
+  }
+  
+  # update the fib vector to hold the current 2 fib numbers.
+  fib.vector[1] = fib.vector[2]
+  fib.vector[2] = next.fib
+}
+@
+First, a vector of size $2$ called \texttt{fib.vector} is created, which initially holds the values of the first $2$ fibonacci terms. 
+Notice that in order to calculate the $n^{th}$ terms of a fibonacci sequence \texttt{$F_n$}, only the previous 2 terms, \texttt{$F_{n-1}$} and \texttt{$F_{n-2}$}, are needed. 
+Therefore, it is possible to solve this problem without having to store every value in the sequence.\\
+
+The variable \texttt{sum.fib} holds the sum of even terms found so far. It is initialized with the value $2$ since we've encountered the second term in the fibonacci sequence, $2$.\\
+
+Inside the \texttt{repeat} loop, the sum of the numbers in \texttt{fib.vector}, which represents the value of the next number in the sequence is calculated and stored in \texttt{next.fib}. If it exceeds 1,000,000, then the script breaks out of the loop. Otherwise, if the \texttt{next.fib} is even, it is added to \texttt{sum.fib}.\\
+
+Finally, \texttt{fib.vector} is updated to hold the 2 most recent fibonacci numbers. 
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Question 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+  \item  \textbf{Conditional Statements and Loops} A palindromic number reads the same 
+  both ways. The largest palindrome made from the product of two 2-digit numbers is 
+  $9009 = 91 \times 99$. Find the largest palindrome made from the product of two 3-digit numbers.
+  
+  You can get the reverse of a number using the ``stringr" package for \texttt{R}
+  (practice Sweave by putting by the citation here) as follows.
+<<>>=
+#install.packages("stringr",repos = "https://cloud.r-project.org")
+library(stringr)
+number.to.reverse <- 1234
+#creates a list containing a vector of characters
+(split.number<-str_split(number.to.reverse,pattern=""))
+(split.number<-split.number[[1]]) #takes just the vector
+(split.number.reversed <- rev(split.number)) #reverses the order of the vector
+(reversed.number <- paste(split.number.reversed, collapse="")) #paste items back together
+(reversed.number<-as.numeric(reversed.number)) #treat it like a number
+@
+\textbf{Remark:} You'll find that the solution to this question will elongate the
+compiling time for the .pdf. That's okay. Once you're happy with the solution 
+you can type the output into your code chunk and set eval=FALSE between the left
+and right arrows.\\\\
+
+\textbf{Solution:} First, I wrapped the code provided above into a function called \texttt{reverse.string}.
+<<>>=
+reverse.string <- function(number.to.reverse) {
+  split.number <- str_split(number.to.reverse, pattern = "")
+  split.number.reversed <- rev(split.number[[1]])
+  reversed.number <-
+    as.numeric(paste(split.number.reversed, collapse = ""))
+  reversed.number
+}
+@
+
+To find the largest palindrome, I thought up 2 approaches. The first approach was to multiply all $i*j$ where $100 \leq i,j \leq 999$, shown below. 
+<<>>=
+largest.palindrome <- 0
+
+find.largest.palindrome <- function() {
+  for (num.1 in 100:999) {
+    for (num.2 in 100:999) {
+      product <- num.1 * num.2
+      if (reverse.string(product) == product & product > largest.palindrome) {
+        largest.palindrome <- product
+      }
+    }
+  }
+  largest.palindrome
+}
+@
+I maintained a \texttt{largest.palindrome} variable that stores the largest palindromic number so far. If \texttt{product} is a palindrome and is greater than \texttt{largest.palindrome}, then \texttt{largest.palindrome} is updated to hold \texttt{product}, which is the new largest palindromic number. The lone \texttt{largest.palindrome} statement right before the closing brace of the function ensures that it is the last evaluated statement, which makes it the function's implicit return value. \\
+
+The second approach involved counting down from the largest product possible, $999*999=998001$ to the least product possible, $100*100=10000$ in a for loop, shown below: 
+
+<<>>=
+find.largest.palindrome.v2 <- function() {
+  max.product <- 999 * 999
+  min.product <- 100 * 100
+  for (current.number in max.product:min.product) {
+    if (reverse.string(current.number) == current.number & check.if.product(current.number)) {
+      return (current.number)
+    }
+  }
+}
+@
+In each iteration, I first check if the \texttt{current.number} is a palindrome. If it is, I then check if it is also a valid product (meaning that it is a product of two 3-digit numbers). To check this, I used a helper function \texttt{check.if.product()}, shown below:\\
+<<>>=
+check.if.product <- function(current.number) {
+  for (i in 999:100) {
+    quotient <- current.number / i
+    if (current.number %% i == 0 & quotient <= 999 & quotient >= 100) {
+      return (TRUE)
+    }
+    else if (quotient > 999) {
+      return (FALSE)
+    }
+  }
+}
+@
+The \texttt{check.if.product()} function takes \texttt{current.number} as input. It then checks if the number is a valid product by dividing it by \texttt{i}, which starts at 999 and counts down to 100, in a \texttt{for} loop. The \texttt{if} block gets executed if the remainder is 0 and the quotient lies in the range 100:999; if it does, then the number is a valid product and the \texttt{check.if.product()} function returns TRUE. The \texttt{else if} condition checks if the quotient exceeds 999. In this case, the product is no longer valid because one of the factors has more than 3 digits; the function returns FALSE.   \\
+Lastly, I called the functions, storing their return values in separate variables:
+<<eval=FALSE>>=
+(largest.palindrome<-find.largest.palindrome())
+(largest.palindrome.v2<-find.largest.palindrome.v2())
+@
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Question 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item \textbf{(Working with Data)} Below you will load and summarize a dataset 
+  containing 575 observations of drug treatments. The data includes the following
+  \begin{itemize}
+    \item ID --	Identification Code	(1 - 575)
+    \item AGE	-- Age at Enrollment	(Years)
+    \item BECK -- Beck Depression Score	(0.000 - 54.000)
+    \item HC --	Heroin/Cocaine Use During	3 Months Prior to Admission (1 = Heroin
+    \& Cocaine; 2 = Heroin Only, 3 = Cocaine Only; 4 = Neither Heroin nor Cocaine)
+    \item IV -- History of IV Drug Use	(1 = Never; 2 = Previous; 3 = Recent)
+    \item IV3	-- Recent IV use	(1 = Yes; 0 = No)
+    \item NDT -- Number of Prior Drug Treatments (0 - 40)
+    \item RACE -- Subject's Race	(0 = White; 1 = Non-White)
+    \item TREAT -- Treatment Randomization (0 = Short Assignment;	1 = Long Assignment)
+    \item SITE -- Treatment Site (0 = A; 1 = B)
+    \item LEN.T	-- Length of Stay in Treatment (Days Admission Date to Exit Date)	
+    \item TIME -- Time to Drug Relapse (Days Measured from Admission Date)
+    \item CENSOR -- Event for Treating Lost to Follow-Up as Returned to Drugs 
+    (1 = Returned to Drugs or Lost to Follow-Up; 0 = Otherwise)
+    \item etc.
+  \end{itemize}
+  \begin{enumerate} %this begins a lettered enumerate so I can ask more 
+                    %than one question in a question.
+    \item Load the data provided in the ``quantreg" package for \texttt{R} \citep{quantreg}.
+<<eval=FALSE>>=
+install.packages("quantreg",repos = "http://cloud.r-project.org/")
+library("quantreg")
+data("uis")
+@
+
+    \item Numerically summarize the Beck Depression Score of the observed drug 
+    treatment patients. Note the following designations of the test when interpreting
+    your results.
+    \begin{itemize}
+      \item 0-13: minimal depression
+      \item 14-19: mild depression
+      \item 20-28: moderate depression
+      \item 29-63: severe depression.
+    \end{itemize}
+    \item Graphically summarize the Beck Depression Score of the
+    observed drug treatment patients. Interpret the results through 
+    the lens of the scale above.
+    \item List three questions about drug use that we might be able to answer based on the 
+    data we have.
+  \end{enumerate}
+\newpage
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%  Question 6
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \item \textbf{(Working with Data)} Hepatitis C is a disease 
+    that affects the liver. The virus that causes hepatitis C 
+    is spread through blood or bodily fluids of an infected person. 
+    The virus is often difficult to diagnose because there are few unique 
+    symptoms. Those infected, however, sometimes experience jaundice -- a 
+    condition that causes yellowing of the skin or eyes, as the liver 
+    is infected.
+
+    \cite{Bracht16} consider the human microfibrillar-associated protein 4,
+    or MFAP4, and its role in disease-related tissue. Stage 0--no fibrosis; 
+    Stage 1--enlarged, fibrotic portal tracts; Stage 2--periportal fibrosis 
+    or portal-portal septa, but intact architecture; Stage 3--fibrosis with
+    architectural distortion, but no obvious cirrhosis; and Stage 4--probable
+    or definite cirrhosis.
+
+    Previously, it has been shown that MFAP4 is a biomarker candidate for hepatic
+    fibrosis and cirrhosis in hepatitis C patients. The analysis of \cite{Bracht16}
+    aimed to consider the ability of MFAP4 to differentiate between stages of the 
+    disease -- fibrosis stages (0-2) and cirrhosis (3-4) based on the Scheuer 
+    scoring system.
+    
+    Below, I load the data and calculate the age of patients using the ``lubridate"
+    package for \texttt{R} \citep{lubridate}.
+<<>>=
+fn<-"http://cipolli.com/students/data/biomarker.csv"
+dat <- read.csv(file=fn, header=TRUE, sep=",")
+head(dat)
+###Calculate the age of each subject
+#install.packages("lubridate",repos = "http://cloud.r-project.org/")
+library(lubridate)
+###Create Date Variable for Date Sampled
+dos<-mdy(dat$Date.of.sampling)
+dos.year<-year(dos)
+###Create age Variable
+age <- dos.year - dat$Year.of.Birth
+###Add age to original dataset
+dat<-data.frame(dat,age)
+@
+  \begin{enumerate}
+  \item Recreate Table 1 in \href{the paper}{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4932744/}. 
+  Add a row to this table labeled ``Median age IQR." I've provided the LaTeX code for the
+  table and made the first entry so you can see how it works.
+
+\textbf{Solution:} 
+I divided my solution into 3 (conceptual) tasks.\\
+The first task was to calculate the mean age, age sd, and age IQR. First, I created 3 vectors: \texttt{ages.mean}, \texttt{ages.sd}, \texttt{ages.iqr}. I initialized them with 6 NA entries; the first 5 indices correspond to fibrosis stage 0, or column \texttt{F0} in the table, to column \texttt{F4} The last index corresponds to the \texttt{All} column in the table. Per their names, these vectors hold the mean age, age sd, and Median age IQR, respectively.
+<<>>=
+ages.mean <- rep(NA, 6)
+ages.sd <- rep(NA, 6)
+ages.iqr <- rep(NA, 6)
+@
+
+Next, I used a for loop to subset the \texttt{age} column by fibrosis stage. The value \texttt{i} ranges from 1 to 5; therefore, \texttt{i-1} corresponds to fibrosis stages 0-4 and the required data can be extracted neatly in a for loop. During each iteration, I filtered the age column by fibrosis stage using \texttt{dat\$age[which(dat\$Fibrosis.Stage == i-1)]}. I then used the \texttt{mean()}, \texttt{sd()}, \texttt{IQR()} functions to calculate the required values, placing them in their respective vectors.\\
+Since the column \texttt{All} corresponds to the entire dataset, I chose to calculate its values outside the for loop.
+<<>>=
+for (i in 1:5) {
+  fi.ages <- dat$age[which(dat$Fibrosis.Stage == i-1)]
+  ages.mean[i] <- round(mean(fi.ages), 2)
+  ages.sd[i] <- round(sd(fi.ages), 2)
+  ages.iqr[i] <- round(IQR(fi.ages), 2)
+}
+
+# mean, iqr, and sd for ages for the entire dataset.
+ages.mean[6] <- round(mean(dat$age), 2)
+ages.sd[6] <- round(sd(dat$age), 2)
+ages.iqr[6] <- round(IQR(dat$age), 2)
+@
+The second task was to get the patient count by gender, as well as a total patient count. The process is analogous to that for calculating ages above. 2 vectors, \texttt{female.count} and \texttt{male.count}, with 6 entries corresponding to fibrosis stages 0-4, and the last entry representing the entire data set.\\
+<<>>=
+female.count <- rep(NA, 6)
+male.count <- rep(NA, 6)
+@
+The for loop here is similar to what I described for the 1st task; in this case I filter out the columns by gender and by fibrosis stage, as shown below. Similar to task 1, \texttt{j-1} corresponds to Fibrosis Stages 0-4. Since the total patient count is just a sum of the male and female patient counts, I opted to calculate it directly when passing the values table \ref{table} using \texttt{Sexpr}. Code below:
+<<>>=
+## Select and count patients with fibrosis stage == j-1 and 
+##   update the female.count and male.count vectors
+for (j in 1:5) {
+  female.count[j] <-
+    length(dat$Patient.ID[which(dat$Gender == "female" &
+                                  dat$Fibrosis.Stage == j - 1)])
+  male.count[j] <-
+    length(dat$Patient.ID[which(dat$Gender == "male" &
+                                  dat$Fibrosis.Stage == j - 1)])
+}
+## count for all patients
+female.count[6] <-
+  length(dat$Patient.ID[which(dat$Gender == "female")])
+
+male.count[6] <- 
+  length(dat$Patient.ID[which(dat$Gender == "male")])
+@
+
+The final task was to summarise data about HCV genotype. I created a data frame in which columns represent the HCV Genotype categories in the table \ref{table:q6}. 
+<<>>=
+
+type.df <- data.frame(
+  type.1 = rep(NA, 6),
+  type.2 = rep(NA, 6),
+  type.3 = rep(NA, 6),
+  type.4 = rep(NA, 6),
+  type.Other = rep(NA, 6),
+  type.NA = rep(NA, 6)
+)
+@
+In order to populate the \texttt{type.df} data frame, I used a nested for loop. The outer loop iterates over the HCV genotypes, where \texttt{k=1-4} corresponds to genotypes 1-4, \texttt{k=5} represents type \texttt{Other}, and \texttt{k=6} represents type {NA}. 
+<<>>=
+for (k in 1:6) {
+  if (k %in% c(1, 2, 3, 4)) {
+    fibrosis.stage <- dat$Fibrosis.Stage[which(dat$HCV.Genotype == k)]
+  }
+  else if (k == 5) {
+    fibrosis.stage <-
+      dat$Fibrosis.Stage[which(dat$HCV.Genotype == "andere")]
+  }
+  else {
+    fibrosis.stage <-
+      dat$Fibrosis.Stage[which(dat$HCV.Genotype == "")]
+  }
+  # l-1 in this case represents the Fibrosis stages.
+  # l==1 to 5 ==> fibrosis stages 0 to 4. l==6 ==> whole data set
+  for (m in 1:6) {
+    if (m == 6)
+    {
+      type.df[m, k] <- length(fibrosis.stage)
+    }
+    else
+    {
+      type.df[m, k] <-
+        length(fibrosis.stage[which(fibrosis.stage == m-1)])
+    }
+  }
+}
+@
+Inside this loop, I have an \texttt{if:else-if:else} block that selects rows from the Fibrosis Stage column of the data set that correspond to the current \texttt{HCV Genotype}. Notice that the genotype \texttt{Other} in the table corresponds to the string \texttt{``andere"} in the data set, while genotype \texttt{NA} corresponds to an empty string. The selected rows are stored in a vector called \texttt{fibrosis.stage}, as in the above code.\\
+In the inner for loop, the variable \texttt{m=1-5} represents the table columns F0-F4, and \texttt{m=6} represents the \texttt{All} column. This loop selects entries in the \texttt{fibrosis.stage} vector that corresponds to the current value of \texttt{m}. It then gets the length of that subset and places it in the \texttt{type.df} data set. Notice that when \texttt{m==6}, we want length of the entire \texttt{fibrosis.stage} vector.\\
+
+\begin{table}[H]
+  \centering
+    \begin{tabular}{lccccccc}\hline
+    Fibrosis Stage    & F0 & F1 & F2 & F3 & F4 & All\\\hline\hline
+    \textbf{Age}                &&&&&&\\
+    Mean age SD        &  $\Sexpr{ages.mean[1]} \pm \Sexpr{ages.sd[1]}$       
+                       &  $\Sexpr{ages.mean[2]} \pm \Sexpr{ages.sd[2]}$   
+                       &  $\Sexpr{ages.mean[3]} \pm \Sexpr{ages.sd[3]}$
+                       &  $\Sexpr{ages.mean[4]} \pm \Sexpr{ages.sd[4]}$
+                       &  $\Sexpr{ages.mean[5]} \pm \Sexpr{ages.sd[5]}$
+                       &  $\Sexpr{ages.mean[6]} \pm \Sexpr{ages.sd[6]}$ \\
+                                
+    Median age IQR     &  $\Sexpr{ages.iqr[1]}$  &  $\Sexpr{ages.iqr[2]}$
+                       &  $\Sexpr{ages.iqr[3]}$  &  $\Sexpr{ages.iqr[4]}$
+                       &  $\Sexpr{ages.iqr[5]}$  &  $\Sexpr{ages.iqr[6]}$ \\
+                               
+    \textbf{Gender}             &&&&&&\\
+    Women              &  $\Sexpr{female.count[1]}$  &  $\Sexpr{female.count[2]}$ 
+                       &  $\Sexpr{female.count[3]}$  &  $\Sexpr{female.count[4]}$ 
+                       &  $\Sexpr{female.count[5]}$  &  $\Sexpr{female.count[6]}$ \\
+                       
+    Men                &  $\Sexpr{male.count[1]}$  &  $\Sexpr{male.count[2]}$ 
+                       &  $\Sexpr{male.count[3]}$  &  $\Sexpr{male.count[4]}$ 
+                       &  $\Sexpr{male.count[5]}$  &  $\Sexpr{male.count[6]}$ \\
+                       
+    Number of patients &  $\Sexpr{male.count[1]+female.count[1]}$  &  $\Sexpr{male.count[2]+female.count[2]}$ 
+                       &  $\Sexpr{male.count[3]+female.count[3]}$  &  $\Sexpr{male.count[4]+female.count[4]}$ 
+                       &  $\Sexpr{male.count[5]+female.count[5]}$  &  $\Sexpr{male.count[6]+female.count[6]}$ \\
+    \textbf{HCV genotype}       &&&&&&\\
+    1                  &  $\Sexpr{type.df$type.1[1]}$  & $\Sexpr{type.df$type.1[2]}$ 
+                       &  $\Sexpr{type.df$type.1[3]}$  & $\Sexpr{type.df$type.1[4]}$
+                       &  $\Sexpr{type.df$type.1[5]}$  & $\Sexpr{type.df$type.1[6]}$\\
+                       
+    2                  &  $\Sexpr{type.df$type.2[1]}$  & $\Sexpr{type.df$type.2[2]}$ 
+                       &  $\Sexpr{type.df$type.2[3]}$  & $\Sexpr{type.df$type.2[4]}$
+                       &  $\Sexpr{type.df$type.2[5]}$  & $\Sexpr{type.df$type.2[6]}$\\
+                       
+    3                  &  $\Sexpr{type.df$type.3[1]}$  & $\Sexpr{type.df$type.3[2]}$ 
+                       &  $\Sexpr{type.df$type.3[3]}$  & $\Sexpr{type.df$type.3[4]}$
+                       &  $\Sexpr{type.df$type.3[5]}$  & $\Sexpr{type.df$type.3[6]}$\\
+                       
+    4                  &  $\Sexpr{type.df$type.4[1]}$  & $\Sexpr{type.df$type.4[2]}$ 
+                       &  $\Sexpr{type.df$type.4[3]}$  & $\Sexpr{type.df$type.4[4]}$
+                       &  $\Sexpr{type.df$type.4[5]}$  & $\Sexpr{type.df$type.4[6]}$\\
+                       
+    Other              &  $\Sexpr{type.df$type.Other[1]}$  & $\Sexpr{type.df$type.Other[2]}$ 
+                       &  $\Sexpr{type.df$type.Other[3]}$  & $\Sexpr{type.df$type.Other[4]}$
+                       &  $\Sexpr{type.df$type.Other[5]}$  & $\Sexpr{type.df$type.Other[6]}$\\
+                       
+    NA                 &  $\Sexpr{type.df$type.NA[1]}$  & $\Sexpr{type.df$type.NA[2]}$ 
+                       &  $\Sexpr{type.df$type.NA[3]}$  & $\Sexpr{type.df$type.NA[4]}$
+                       &  $\Sexpr{type.df$type.NA[5]}$  & $\Sexpr{type.df$type.NA[6]}$\\\hline
+    \end{tabular}
+    \caption{Patient cohorts characteristics, subdivided by fibrosis stage}
+    \label{table:q6}
+  \end{table}
+  \item Create several graphs that may be helpful for the researchers.
+  \end{enumerate}
+\end{enumerate}
+\newpage
+\bibliography{bib}
+\end{document}

@@ -1,0 +1,22 @@
+for q1
+
+  initially I had was growing the vector I had, which was in itself inefficient, as I learned from q2. ALthough, it is unlikely to affect the results since the vector creation was done the same way. 
+  Learned this nifty little concept called vectorisation; in basic terms, a lot of functions play well with vectors. And it happens to be faster as well. 
+  Decided to run these 2 functions about 1000 times each, recording the results in separate vectors which I then put in a data frame. I do this as well in q2. Basically so I can play more with other tools in R.
+
+for q2
+
+  Turns out indexing is faster than appending the vector on the spot. Since it involves an assignment, I'm assuming that each time, we're creating a new vector; which involves copying the old one and adding one more element. (This may not be the case)
+  Indexing is so fast that I consistently get a result of 0s for time taken. I had to bump it up to 10,000 in order to play with the data. 
+  
+for q3
+  Since at the moment I don't plan on re-using the data, I don't need to store it. However, if I expected to re-use that data, for example to calculate the sum of odds, or to move the upper bound to 2 million, then I would store it. 
+  In this case, there's no way to know beforehand what the size of the vector will be. A safe bet would be to use a mix of indexing and growing. That is, create an n-size vector, once it gets filled, create another vector of double size, copy the old vector into the new one and go on calculating. 
+  
+for q4
+  Initially, I used a brute force approach, multiplying each number 100:999 by each number 100:999 then checking if it's a palindrome. This is an n^2 function, which is not as desirable.
+  My second approach was to loop through numbers, starting with the product of 999*999, the highest possible number that we consider. Once we find a palindrome, I check if it's a product of one of the numbers 100:999 by dividing it by these numbers in turn. This check is also a loop, and it stops if (1) the quotient and divisor are both in the range 100:999 or (2) if the quotient exceeds 999. We have found our max if the first condition passes. 
+  Initial one took about 72s to run, which is quite a bit of time. Second one took about 12s.
+  
+for q5
+  numerically summarize them, meaning run summary on a subset of the data set. And more if possible. 
